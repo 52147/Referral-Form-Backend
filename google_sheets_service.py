@@ -35,6 +35,14 @@ credentials = Credentials.from_service_account_info(service_account_info)
 # Now you can use `credentials` for Google API clients that require authenticatio
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
+def get_sheet_data(range_name):
+    # Use the credentials that were already set up
+    service = build('sheets', 'v4', credentials=credentials)
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SPREADSHEET_ID, range=range_name).execute()
+    values = result.get('values', [])
+    return values
+
 def update_sheet_headers(spreadsheet_id, range_name, values):
     service = build('sheets', 'v4', credentials=credentials)
     body = {'values': [values]}
