@@ -82,6 +82,27 @@ curl -X POST http://127.0.0.1:5000/clear-values \
 -H "Content-Type: application/json" \
 -d '{"range": "Sheet1!A2:J2"}'
 ```
+### Search for Referral Information
+Search for a referral entry by name and return all associated data:
+```bash
+curl "http://127.0.0.1:5000/search?query=John%20Doe"
+```
+This search will return all column data for the row where "John Doe" was found, labeled by column name.
+Return result:
+```bash
+{
+  "Additional Information Required": "None",
+  "Candidate Visa Requirements": "None",
+  "Candidate's Work Authorization": "Citizen",
+  "Company Name": "Example Company",
+  "Current Position/Title": "Software Engineer",
+  "Email Address": "johndoe@example.com",
+  "Expected Time to Respond": "1 week",
+  "Name": "John Doe",
+  "Phone Number": "123-456-7890",
+  "Position you can provide referral": "Engineering"
+}
+```
 
 ## Contributing
 

@@ -49,3 +49,19 @@ def clear_values():
     result = google_sheets_service.clear_values(SPREADSHEET_ID, range_name)
     return jsonify(result)
 
+
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query', '')
+    if not query:
+        return jsonify({"error": "Missing query parameter"}), 400
+
+    row_data = google_sheets_service.search_sheet(SPREADSHEET_ID, query)
+    if row_data:
+        return jsonify(row_data)
+    else:
+        return jsonify({"message": "No match found"}), 404
+
+
+
+
