@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, request  # Make sure to import 'request' here
 import google_sheets_service
 import os
+from flask_cors import CORS  # Import CORS
+
 SPREADSHEET_ID = os.getenv('GOOGLE_SPREADSHEET_ID')
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for the app
 
 @app.route('/data', methods=['GET'])
 def get_data():
