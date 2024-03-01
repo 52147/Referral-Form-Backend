@@ -2,10 +2,13 @@ from flask import Flask, jsonify, request  # Make sure to import 'request' here
 import googleapiclient.discovery
 import google_sheets_service
 import os
+from flask_cors import CORS
+
 SPREADSHEET_ID = os.getenv('GOOGLE_SPREADSHEET_ID')
 
 app = Flask(__name__)
-
+# Enable CORS for all domains on all routes. Adjust according to your needs.
+CORS(app)
 @app.route('/data', methods=['GET'])
 def get_data():
     range_name = 'Sheet1'  # Specify the actual range
@@ -66,18 +69,17 @@ def search():
 @app.route('/delete-row', methods=['POST'])
 def delete_row():
     data = request.json
-    range_name = data.get('range')  # Assuming this is in the format "Sheet1!A1", you need to extract the row number.
+    range_name = data.get('range')
     if not range_name:
         return jsonify({"error": "Missing range"}), 400
     
-    # Extract the row number from the range, assuming a simple format.
-    # This is a simplistic approach; you may need a more robust solution based on your range format.
     try:
         sheet_name, row_range = range_name.split('!')
         start_row = int(row_range[1:]) - 1  # Convert to 0-based index for the API
     except ValueError:
         return jsonify({"error": "Invalid range format"}), 400
 
+    # Assuming google_sheets_service is already authenticated and set up
     batch_update_request_body = {
         "requests": [
             {
