@@ -35,10 +35,20 @@ def update_values():
     data = request.json
     range_name = data.get('range')  # Corrected from data.get('A1:J1')
     values = data.get('values')
+    
+    # Check if range and values are provided
     if not range_name or not values:
         return jsonify({"error": "Missing range or values"}), 400
+    
+    # Validate the length of the values array
+    expected_column_count = len(range_name.split(":")[1])  # Get the number of columns in the range
+    if len(values) != expected_column_count:
+        return jsonify({"error": "Number of values does not match the number of columns in the range"}), 400
+    
+    # Proceed with updating values in Google Sheets
     result = google_sheets_service.update_values(SPREADSHEET_ID, range_name, values)
     return jsonify(result)
+
 
 @app.route('/clear-values', methods=['POST'])
 def clear_values():
