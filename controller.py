@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request  # Make sure to import 'request' here
+import googleapiclient.discovery
 import google_sheets_service
 import os
 SPREADSHEET_ID = os.getenv('GOOGLE_SPREADSHEET_ID')
@@ -62,6 +63,38 @@ def search():
     else:
         return jsonify({"message": "No match found"}), 404
 
+@app.route('/delete-row', methods=['POST'])
+def delete_row():
+    data = request.json
+    range_name = data.get('range')  # Assuming this is in the format "Sheet1!A1", you need to extract the row number.
+    if not range_name:
+        return jsonify({"error": "Missing range"}), 400
+    
+    # Extract the row number from the range, assuming a simple format.
+    # This is a simplistic approach; you may need a more robust solution based on your range format.
+    try:
+        sheet_name, row_range = range_name.split('!')
+        start_row = int(row_range[1:]) - 1  # Convert to 0-based index for the API
+    except ValueError:
+        return jsonify({"error": "Invalid range format"}), 400
 
+    batch_update_request_body = {
+        "requests": [
+            {
+                "deleteDimension": {
+                    "range": {
+                        "sheetId": 0,  # You need to specify the correct sheet ID here
+                        "dimension": "ROWS",
+                        "startIndex": start_row,
+                        "endIndex": start_row + 1
+                    }
+                }
+            }
+        ]
+    }
 
-
+    try:
+        result = google_sheets_service.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=batch_update_request_body).execute()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
