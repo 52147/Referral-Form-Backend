@@ -85,7 +85,7 @@ def delete_row():
             {
                 "deleteDimension": {
                     "range": {
-                        "sheetId": 0,  # You need to specify the correct sheet ID here
+                        "sheetId": SPREADSHEET_ID,  # You need to specify the correct sheet ID here
                         "dimension": "ROWS",
                         "startIndex": start_row,
                         "endIndex": start_row + 1
