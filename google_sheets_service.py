@@ -11,11 +11,14 @@ COLUMN_NAMES = {
     4: "Company Name",
     5: "Current Position/Title",
     6: "Position you can provide referral",
-    7: "Candidate Visa Requirements",
-    8: "Candidate's Work Authorization",
+    7: "Provide Sponsorship",  # Assuming this replaces "Candidate's Work Authorization"
+    8: "Candidate's Visa Requirements",  # Renamed for clarity
     9: "Additional Information Required",
-    10: "Expected Time to Respond"
+    10: "Expected Time to Respond",
+    11: "Date Added",  # New column
+    12: "Referrals Status"  # New column
 }
+
 
 # Assuming the environment variables are set correctly
 # SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_SERVICE_ACCOUNT_FILE')  # Corrected environment variable name

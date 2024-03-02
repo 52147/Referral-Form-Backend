@@ -20,7 +20,7 @@ def update_headers():
     headers = request.json.get('headers', [])
     if not headers:
         return jsonify({"error": "No headers provided"}), 400
-    range_name = 'A1:J1'  # Update this range as needed
+    range_name = 'A1:L1'  # Update this range as needed
     result = google_sheets_service.update_sheet_headers(SPREADSHEET_ID, range_name, headers)
     return jsonify({"message": "Headers updated successfully", "updatedCells": result.get('updatedCells')})
 
