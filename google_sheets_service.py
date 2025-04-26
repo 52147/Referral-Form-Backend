@@ -25,17 +25,17 @@ COLUMN_NAMES = {
 
 
 def get_credentials():
-    """
-    Load and return service account credentials from the
-    GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 environment variable.
-    """
-    encoded_json = os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON_BASE64')
-    if not encoded_json:
-        raise ValueError(
-            "The GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 environment variable is not set or empty."
-        )
-    decoded = base64.b64decode(encoded_json).decode('utf-8')
-    info = json.loads(decoded)
+    # 先尝试从 env 里拿 Base64
+    encoded = os.environ.get('GOOGLE_SERVICE_ACCOUNT_JSON_BASE64')
+    if encoded:
+        info = json.loads(base64.b64decode(encoded).decode('utf-8'))
+    else:
+        # fallback：从本地文件读
+        file_path = os.environ.get('GOOGLE_SERVICE_ACCOUNT_FILE')
+        if not file_path or not os.path.exists(file_path):
+            raise ValueError("既没有 JSON_BASE64，也没有有效的 GOOGLE_SERVICE_ACCOUNT_FILE")
+        with open(file_path, 'r') as f:
+            info = json.load(f)
     creds = Credentials.from_service_account_info(info, scopes=SCOPES)
     return creds
 
